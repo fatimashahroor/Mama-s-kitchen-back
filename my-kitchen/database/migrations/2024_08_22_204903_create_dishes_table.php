@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cook_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
-            $table->string('single_dish_price'); //price of a single dish
+            $table->string('dish_price'); //price of a single dish
             $table->string('image_path');
             $table->string('steps')->nullable();
             $table->timestamps();
