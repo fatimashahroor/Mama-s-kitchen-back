@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('additional_ing', function (Blueprint $table) {
+        Schema::create('additional_ings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ingredient_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('cost');
-            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('additional_ing');
+        Schema::dropIfExists('additional_ings');
     }
 };
