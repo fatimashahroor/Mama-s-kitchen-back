@@ -16,7 +16,13 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('email');
             $table->string('password');
-            $table->enum('role', ['cook', 'customer','deliverer']);
+            $table->integer('age')->nullable();
+            $table->string('phone')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('image_path')->nullable();
+            $table->string('rating')->nullable();
+            $table->enum('status', ['available', 'busy', 'offline'])->nullable();
+            $table->string('delivery_charge')->nullable();
             $table->timestamps();
         });
 

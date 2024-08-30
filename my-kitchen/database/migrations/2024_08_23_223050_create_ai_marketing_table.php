@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ai_marketing', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cook_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('caption');
             $table->string('image_path');
             $table->timestamps();

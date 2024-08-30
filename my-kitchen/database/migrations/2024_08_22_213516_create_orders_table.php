@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('location_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('status');
             $table->string('order_price'); //price of all dishes with the additional ingredients
             $table->timestamps();

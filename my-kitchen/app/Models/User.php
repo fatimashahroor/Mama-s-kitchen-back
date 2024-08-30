@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +22,11 @@ class User extends Authenticatable
         'full_name',
         'email',
         'password',
-        'role',
+        'phone',
+        'bio',
+        'image_path',
+        'status',
+        'delivery_charge',
     ];
 
     /**
@@ -46,17 +52,49 @@ class User extends Authenticatable
         ];
     }
 
-    public function cook()
+    public function getJWTIdentifier()
     {
-        return $this->hasOne(Cook::class);
+        return $this->getKey();
     }
 
-    public function customer()
+    public function getJWTCustomClaims()
     {
-        return $this->hasOne(Customer::class);
+        return [
+           'role' => $this->getRoleNames()
+        ];
     }
-    public function ai_suggestions()
+
+    public function review()
     {
-        return $this->hasMany(AiSuggestion::class);
+        return $this->hasMany(Review::class);
+    }
+
+    public function location()
+    {
+        return $this->hasMany(Location::class);
+    }
+
+    public function dish()
+    {
+        return $this->hasMany(Dish::class);
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function additional_ingredient()
+    {
+        return $this->hasMany(Additional_ing::class);
+    }
+    public function ai_marketing()
+    {
+        return $this->hasMany(Ai_marketing::class);
+    }
+
+    public function ai_suggestion()
+    {
+        return $this->hasMany(Ai_suggestion::class);
     }
 }
