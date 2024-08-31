@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Additional_ingController;
 
 class IngredientController extends Controller
 {
@@ -26,10 +27,22 @@ class IngredientController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
-        $ingredient = Ingredient::create($request->all());
+        if ($request->isSelected == true) {
+            $request->validate([
+                'name' => 'required|string',
+                'cost' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            ]);
+            $ingredient = Ingredient::create($request->all());
+            $additional_ing = Additional_ingController::store($request->user_id, $ingredient->id, $request->cost);
+            if ($additional_ing['additional_ing'] == null) {
+                return response()->json($additional_ing['message'], 400);
+            }
+        } else {
+            $request->validate([
+                'name' => 'required|string',
+            ]);
+            $ingredient = Ingredient::create($request->all());
+        }
         return response()->json(['ingredient created successfully', 'ingredient' => $ingredient], 200);
     }
 
