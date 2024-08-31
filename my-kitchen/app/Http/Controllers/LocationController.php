@@ -60,7 +60,7 @@ class LocationController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'city' => 'required|string',
             'region' => 'required|string',
             'building' => 'required|string',
@@ -68,6 +68,12 @@ class LocationController extends Controller
             'floor_nb' => 'required|numeric|between:0,50',
             'near' => 'required|string',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 400);
+        }
         $location = Location::findOrFail($id);
         $location->update($request->all());
         return response()->json(['message' => 'Location updated successfully', 'location' => $location], 200);
