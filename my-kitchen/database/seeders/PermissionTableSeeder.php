@@ -17,18 +17,19 @@ class PermissionTableSeeder extends Seeder
     {
        $permissions = [
            'role-list', 'role-create', 'role-edit', 'role-delete',
-           'dish-list', 'dish-create', 'dish-edit', 'dish-delete',
-           'user-list', 'user-create', 'user-delete', 
-           'review-list', 'review create', 'review edit', 'review-delete',
+           'dish-list', 'dish-create', 'dish-edit', 'dish-delete', 'dish-view',
+           'user-list', 'user-create', 'user-edit','user-delete', 
+           'review-list', 'review-create', 'review-edit', 'review-delete',
            'order-list', 'order-create', 'order-edit', 'order-delete',
            'payment-list','payment-create', 'payment-delete',
            'additional_ing-list', 'additional_ing-create', 'additional_ing-edit', 'additional_ing-delete',
            'ingredient-list', 'ingredient-create', 'ingredient-edit', 'ingredient-delete',
+           'location-list','location-create', 'location-edit', 'location-delete',
         ];
 
 
         foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission]);
+             Permission::create(['name' => $permission, 'guard_name'=> 'api']);
         }
     }
 }
