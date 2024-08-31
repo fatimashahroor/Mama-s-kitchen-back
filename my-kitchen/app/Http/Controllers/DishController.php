@@ -71,11 +71,11 @@ class DishController extends Controller
         if (!$dish) {
             return response()->json(['message' => 'Dish not found'], 404);
         }
-        // $request->validate([
-        //     'name' => 'required|string',
-        //     'price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
-        //     'steps' => 'sometimes|nullable|string',
-        // ]);
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
+            'steps' => 'sometimes|nullable|string',
+        ]);
         
         $dish->name = $request->name;
         $dish->price = $request->price;
