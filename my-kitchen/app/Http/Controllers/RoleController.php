@@ -10,6 +10,13 @@ use DB;
 class RoleController extends Controller
 {
 
+    /**
+     * Constructor
+     *
+     * Setup middleware for this controller.
+     * 
+     * @return void
+     */
     function __construct()
     {
          $this->middleware('permission:role-list');
@@ -31,7 +38,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->$request->validate([
+        $request->validate([
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
         ]);
@@ -55,7 +62,7 @@ class RoleController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->$request->validate([
+        $request->validate([
             'name' => 'required',
             'permission' => 'required',
         ]);
@@ -66,7 +73,7 @@ class RoleController extends Controller
         }
 
         $role->update(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
+        $role->givePermissionTo($request->input('permission'));
 
         return response()->json(['message' => 'Role updated successfully', 'role' => $role]);
     }
