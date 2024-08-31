@@ -17,4 +17,9 @@ class Ingredient extends Model
     {
         return $this->belongsToMany(Dish::class);
     }
+
+    public function additional_ing()
+    {
+        return $this->hasOne(Additional_ing::class);
+    }
 }

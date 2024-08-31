@@ -16,6 +16,11 @@ class Additional_ing extends Model
         return $this->belongsToMany(Order::class);
     }
 
+    public function ingredient()
+    {
+        return $this->belongsTo(Ingredient::class);
+    }
+
     public function dish()
     {
         return $this->belongsToMany(Dish::class);
