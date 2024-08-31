@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('region');
             $table->string('building');
             $table->string('street');
-            $table->string('floor');
+            $table->integer('floor_nb');
             $table->string('near');
+            $table->timestamps();
         });
     }
 
