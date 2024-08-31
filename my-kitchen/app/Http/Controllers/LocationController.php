@@ -18,6 +18,9 @@ class LocationController extends Controller
     public function index()
     {
         $location = Location::latest()->paginate(5);
+        if (!$location) {
+            return response()->json(['message' => 'No location found'], 404);
+        }
         return response()->json($location);
     }
 
@@ -33,6 +36,18 @@ class LocationController extends Controller
             'near' => 'required|string',
         ]);
         $location = Location::create($request->all());
+        if (!$location) {
+            return response()->json(['message' => 'Error while creating location'], 400);
+        }
         return response()->json(['message' => 'Location created successfully', 'location' => $location], 201);
+    }
+
+    public function show($id)
+    {
+        $location = Location::find($id);
+        if (!$location) {
+            return response()->json(['message' => 'Location not found'], 404);
+        }
+        return response()->json(['location'=>$location], 200);
     }
 }
