@@ -71,6 +71,7 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token, $user)
     {
+       
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -78,7 +79,8 @@ class AuthController extends Controller
             'user' => [
                 'id' => $user->id, 
                 'roles' => $user->roles()->pluck('id'),
-                'permissions'=> $user->permissions()->pluck('id'),
+                'permissions'=> $user->roles->flatMap(function ($role) {
+                    return $role->permissions->pluck('id');})->unique()
             ]
         ]);
     }
