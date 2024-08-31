@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Location;
+use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
 {
@@ -26,15 +27,21 @@ class LocationController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id|numeric',
             'city' => 'required|string',
             'region' => 'required|string',
             'building' => 'required|string',
             'street' => 'required|string',
-            'floor_nb' => 'required|numeric',
+            'floor_nb' => 'required|numeric|between:0,50',
             'near' => 'required|string',
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 400);
+        }
         $location = Location::create($request->all());
         if (!$location) {
             return response()->json(['message' => 'Error while creating location'], 400);
@@ -49,5 +56,30 @@ class LocationController extends Controller
             return response()->json(['message' => 'Location not found'], 404);
         }
         return response()->json(['location'=>$location], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'city' => 'required|string',
+            'region' => 'required|string',
+            'building' => 'required|string',
+            'street' => 'required|string',
+            'floor_nb' => 'required|numeric|between:0,50',
+            'near' => 'required|string',
+        ]);
+        $location = Location::findOrFail($id);
+        $location->update($request->all());
+        return response()->json(['message' => 'Location updated successfully', 'location' => $location], 200);
+    }
+
+    public function destroy($id)
+    {
+        $location = Location::find($id);
+        if (!$location) {
+            return response()->json(['message' => 'Location not found'], 404);
+        }
+        $location->delete();
+        return response()->json(['message' => 'Location deleted successfully'], 200);
     }
 }
