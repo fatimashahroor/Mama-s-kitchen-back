@@ -33,13 +33,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
 {
-    $this->$request->validate([
+    $request->validate([
         'full_name' => 'required',
         'email' => 'required|email|unique:users,email',
         'password' => 'required',
         'roles' => 'required'
     ]);
-
+    
     $input = $request->all();
     $input['password'] = Hash::make($input['password']);
 
