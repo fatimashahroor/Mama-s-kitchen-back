@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\Additional_ingController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -43,3 +44,6 @@ Route::get('/location/{id}', [LocationController::class, 'show']);
 Route::post('/location/create', [LocationController::class, 'store']);
 Route::post('/location/update/{id}', [LocationController::class, 'update']);
 Route::delete('/location/delete/{id}', [LocationController::class, 'destroy']);
+
+Route::get('/additional_ing', [Additional_ingController::class, 'index']);
+Route::get('/additional_ing/{id}', [Additional_ingController::class, 'show']);
