@@ -21,7 +21,7 @@ class AdditionalIngFactory extends Factory
         return [
             'user_id' => User::factory(),
             'ingredient_id'=>Ingredient::factory(),
-            'cost'->$this->faker->numberBetween(0, 10),
+            'cost'->$this->faker->numberBetween(0, 20),
         ];
     }
 }
