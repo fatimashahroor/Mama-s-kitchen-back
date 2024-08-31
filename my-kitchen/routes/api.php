@@ -34,7 +34,10 @@ Route::post('/dish/update/{id}', [DishController::class, 'update']);
 Route::delete('/dish/delete/{id}', [DishController::class, 'destroy']);
 
 Route::get('/ingredient', [IngredientController::class, 'index']);
+Route::get('/ingredient/{id}', [IngredientController::class, 'show']);
 Route::post('/ingredient/create', [IngredientController::class, 'store']);
+Route::post('/ingredient/update/{id}', [IngredientController::class, 'update']);
+Route::delete('/ingredient/delete/{id}', [IngredientController::class, 'destroy']);
 
 Route::get('/location/{id}', [LocationController::class, 'show']);
 Route::post('/location/create', [LocationController::class, 'store']);
