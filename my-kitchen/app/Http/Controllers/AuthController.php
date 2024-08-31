@@ -22,19 +22,17 @@ class AuthController extends Controller
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users', 
             'password' => 'required|string|min:8',
-            'roles' => 'required|array|max:1'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
         $user = User::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        $user->assignRole($request->input('roles'));
+        $user->assignRole([3]);
         return response()->json(['message' => 'User created successfully'], 201);
     }
 
