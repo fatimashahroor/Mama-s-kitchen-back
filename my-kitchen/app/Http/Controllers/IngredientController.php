@@ -18,6 +18,9 @@ class IngredientController extends Controller
     public function index()
     {
         $ingredientes= Ingredient::latest()->paginate(5);
+        if (!$ingredientes) {
+            return response()->json(['message' => 'No ingredients found'], 404);
+        }
         return response()->json($ingredientes);
     }
 
@@ -50,5 +53,15 @@ class IngredientController extends Controller
         }
         $ingredient->update($request->all());
         return response()->json(['message' => 'Ingredient updated successfully', 'ingredient' => $ingredient]);
+    }
+
+    public function destroy($id)
+    {
+        $ingredient = Ingredient::find($id);
+        if (!$ingredient) {
+            return response()->json(['message' => 'Ingredient not found'], 404);
+        }
+        $ingredient->delete();
+        return response()->json(['message' => 'Ingredient deleted successfully']);
     }
 }
