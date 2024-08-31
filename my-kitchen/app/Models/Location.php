@@ -9,7 +9,7 @@ class Location extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'city', 'region', 'building', 'street', 'flloor', 'near'];
+    protected $fillable = ['user_id', 'city', 'region', 'building', 'street', 'floor_nb', 'near'];
 
     public function user()
     {
