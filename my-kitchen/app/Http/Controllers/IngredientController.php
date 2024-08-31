@@ -29,4 +29,26 @@ class IngredientController extends Controller
         $ingredient = Ingredient::create($request->all());
         return response()->json(['ingredient created successfully', 'ingredient' => $ingredient], 200);
     }
+
+    public function show($id)
+    {
+        $ingredient = Ingredient::find($id);
+        if (!$ingredient) {
+            return response()->json(['message' => 'Ingredient not found'], 404);
+        }
+        return response()->json($ingredient);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+        $ingredient = Ingredient::find($id);
+        if (!$ingredient) {
+            return response()->json(['message' => 'Ingredient not found'], 404);
+        }
+        $ingredient->update($request->all());
+        return response()->json(['message' => 'Ingredient updated successfully', 'ingredient' => $ingredient]);
+    }
 }
