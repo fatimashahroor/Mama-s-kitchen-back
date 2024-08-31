@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\DishController;
+use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use Spatie\Permission\Models\Role;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LocationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -24,7 +26,17 @@ Route::get('/role/{id}', [RoleController::class, 'show']);
 Route::post('/role/create', [RoleController::class, 'store']);
 Route::put('/role/update/{id}', [RoleController::class, 'update']);
 
+Route::post('/user/create', [UserController::class, 'store']);
+
 Route::get('/dish/{id}', [DishController::class, 'show']);
 Route::post('/dish/create', [DishController::class, 'store']);
 Route::post('/dish/update/{id}', [DishController::class, 'update']);
 Route::delete('/dish/delete/{id}', [DishController::class, 'destroy']);
+
+Route::get('/ingredient', [IngredientController::class, 'index']);
+Route::post('/ingredient/create', [IngredientController::class, 'store']);
+
+Route::get('/location/{id}', [LocationController::class, 'show']);
+Route::post('/location/create', [LocationController::class, 'store']);
+Route::post('/location/update/{id}', [LocationController::class, 'update']);
+Route::delete('/location/delete/{id}', [LocationController::class, 'destroy']);
