@@ -22,7 +22,7 @@ class PermissionTableSeeder extends Seeder
            'review-list', 'review-create', 'review-edit', 'review-delete',
            'order-list', 'order-create', 'order-edit', 'order-delete',
            'payment-list','payment-create', 'payment-delete',
-           'additional_ing-list', 'additional_ing-create', 'additional_ing-edit', 'additional_ing-delete',
+           'additional_ing-list', 'additional_ing-edit', 'additional_ing-delete',
            'ingredient-list', 'ingredient-create', 'ingredient-edit', 'ingredient-delete',
            'location-list','location-create', 'location-edit', 'location-delete',
         ];
