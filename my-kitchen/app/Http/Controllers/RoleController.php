@@ -55,9 +55,9 @@ class RoleController extends Controller
         if (!$role) {
             return response()->json(['message' => 'Role not found'], 404);
         }
-        $rolePermissions = $role->permissions;
+        $role->permissions;
 
-        return response()->json(['role' => $role, 'permissions' => $rolePermissions]);
+        return response()->json(['role' => $role]);
     }
 
     public function update(Request $request, $id)
