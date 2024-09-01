@@ -28,6 +28,7 @@ Route::post('/role/create', [RoleController::class, 'store']);
 Route::put('/role/update/{id}', [RoleController::class, 'update']);
 
 Route::post('/user/create', [UserController::class, 'store']);
+Route::get('/user/{id}', [UserController::class, 'show']);
 
 Route::get('/dish/{id}', [DishController::class, 'show']);
 Route::post('/dish/create', [DishController::class, 'store']);
@@ -47,3 +48,5 @@ Route::delete('/location/delete/{id}', [LocationController::class, 'destroy']);
 
 Route::get('/additional_ing', [Additional_ingController::class, 'index']);
 Route::get('/additional_ing/{id}', [Additional_ingController::class, 'show']);
+Route::post('/additional_ing/update/{id}', [Additional_ingController::class, 'update']);
+Route::delete('/additional_ing/delete/{id}', [Additional_ingController::class, 'destroy']); 
