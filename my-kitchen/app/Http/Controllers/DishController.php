@@ -27,6 +27,7 @@ class DishController extends Controller
             'name' => 'required|string',
             'price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
             'steps' => 'sometimes|text',
+            'available_on' => 'required|string',
         ]);
 
         $dish=Dish::create($request->all());
@@ -75,6 +76,7 @@ class DishController extends Controller
             'name' => 'required|string',
             'price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
             'steps' => 'sometimes|nullable|string',
+            'available_on' => 'required|string',
         ]);
         
         $dish->name = $request->name;
