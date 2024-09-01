@@ -9,7 +9,7 @@ class Dish extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'name', 'steps', 'price', 'image_path'];
+    protected $fillable = ['user_id', 'name', 'steps', 'price', 'image_path', 'available_on'];
 
     public function user()
     {
