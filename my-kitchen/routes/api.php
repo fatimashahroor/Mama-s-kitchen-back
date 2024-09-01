@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\Additional_ingController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -50,3 +51,5 @@ Route::get('/additional_ing', [Additional_ingController::class, 'index']);
 Route::get('/additional_ing/{id}', [Additional_ingController::class, 'show']);
 Route::post('/additional_ing/update/{id}', [Additional_ingController::class, 'update']);
 Route::delete('/additional_ing/delete/{id}', [Additional_ingController::class, 'destroy']); 
+
+Route::get('/order', [OrderController::class, 'index']);
