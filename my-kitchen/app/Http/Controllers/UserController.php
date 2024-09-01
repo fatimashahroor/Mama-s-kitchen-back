@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Arr;
 use DB;
 use Hash;
@@ -56,13 +57,18 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-{
-    $user = User::find($id);
-    if (!$user) {
-        return response()->json(['message' => 'User not found'], 404);
+    {
+        $user = User::find($id);
+        $role = Role::find($user->roles[0]->id);
+        $role->permissions;
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        return response()->json(['user'=>['id'=>$user->id, 'full_name'=>$user->full_name, 'email'=>$user->email, 'age'=>$user->age,
+        'phone'=>$user->phone, 'bio'=>$user->bio, 'image_path'=>$user->image_path, 'rating'=>$user->rating, 'status'=>$user->status, 
+        'created_at'=>$user->created_at, 'updated_at'=>$user->updated_at], 'role'=>$role]);
     }
-    return response()->json($user);
-}
 
     
     /**
