@@ -29,7 +29,7 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::factory(),
             'location_id' => Location::factory(),
-            'status' => $this->faker->randomElement(['pending', 'completed']),
+            'status' => $this->faker->randomElement(['requested','pending', 'issued', 'canceled']),
             'order_price' => $order_price,
         ];
     }
