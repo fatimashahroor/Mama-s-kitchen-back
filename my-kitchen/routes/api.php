@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\Additional_ingController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -31,6 +32,7 @@ Route::put('/role/update/{id}', [RoleController::class, 'update']);
 Route::post('/user/create', [UserController::class, 'store']);
 Route::get('/user/{id}', [UserController::class, 'show']);
 
+Route::get('/dish', [DishController::class, 'index']);
 Route::get('/dish/{id}', [DishController::class, 'show']);
 Route::post('/dish/create', [DishController::class, 'store']);
 Route::post('/dish/update/{id}', [DishController::class, 'update']);
@@ -42,6 +44,7 @@ Route::post('/ingredient/create', [IngredientController::class, 'store']);
 Route::post('/ingredient/update/{id}', [IngredientController::class, 'update']);
 Route::delete('/ingredient/delete/{id}', [IngredientController::class, 'destroy']);
 
+Route::get('/location', [LocationController::class, 'index']);
 Route::get('/location/{id}', [LocationController::class, 'show']);
 Route::post('/location/create', [LocationController::class, 'store']);
 Route::post('/location/update/{id}', [LocationController::class, 'update']);
@@ -53,3 +56,6 @@ Route::post('/additional_ing/update/{id}', [Additional_ingController::class, 'up
 Route::delete('/additional_ing/delete/{id}', [Additional_ingController::class, 'destroy']); 
 
 Route::get('/order', [OrderController::class, 'index']);
+Route::post('/order/create', [OrderController::class, 'store']);
+
+Route::get('/payment', [PaymentController::class, 'index']);
