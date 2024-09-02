@@ -15,4 +15,13 @@ class ReviewController extends Controller
          $this->middleware('permission:review-edit', ['only' => ['update']]);
          $this->middleware('permission:review-delete', ['only' => ['destroy']]);
     }
+
+    public function index()
+    {
+        $reviews = Review::latest()->paginate(5);
+        if ($reviews['total'] == 0) {
+            return response()->json(['message' => 'No reviews found'], 404);
+        }
+        return response()->json($reviews);
+    }
 }
