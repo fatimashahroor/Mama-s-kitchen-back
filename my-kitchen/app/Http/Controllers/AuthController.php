@@ -33,7 +33,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         $user->assignRole([3]);
-        return response()->json(['message' => 'User created successfully'], 201);
+        $token = JWTAuth::fromUser($user);
+        return response()->json(['message' => 'User created successfully', 'user' => $user, 
+        'token' => $token], 201);
     }
 
     /**
@@ -54,7 +56,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Invalid user credentials'], 401);
         }
         $user = Auth::user(); 
 
