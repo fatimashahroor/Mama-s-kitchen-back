@@ -21,7 +21,6 @@ class UserController extends Controller
         $this->middleware('permission:user-create', ['only' => ['store']]);
         $this->middleware('permission:user-edit', ['only'=> ['update']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
-
     }
     /**
      * Display a listing of the resource.
@@ -29,10 +28,10 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-{
-    $users = User::orderBy('id','DESC')->paginate(5);
-    return response()->json($users);
-}
+    {
+        $users = User::orderBy('id','ASC')->paginate(5);
+        return response()->json($users);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,22 +40,22 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'full_name' => 'required',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required',
-        'roles' => 'required'
-    ]);
-    
-    $input = $request->all();
-    $input['password'] = Hash::make($input['password']);
+    {
+        $request->validate([
+            'full_name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
+            'roles' => 'required'
+        ]);
+        
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
 
-    $user = User::create($input);
-    $user->assignRole($request->input('roles'));
+        $user = User::create($input);
+        $user->assignRole($request->input('roles'));
 
-    return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
-}
+        return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
+    }
 
     /**
      * Display the specified resource.
@@ -77,7 +76,6 @@ class UserController extends Controller
         'phone'=>$user->phone, 'bio'=>$user->bio, 'image_path'=>$user->image_path, 'rating'=>$user->rating, 'status'=>$user->status, 
         'created_at'=>$user->created_at, 'updated_at'=>$user->updated_at], 'role'=>$role]);
     }
-
     
     /**
      * Update the specified resource in storage.
@@ -113,9 +111,6 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User updated successfully', 'user' => $user]);
     }
-
-
-
     /**
      * Remove the specified resource from storage.
      *
