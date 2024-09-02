@@ -21,7 +21,7 @@ class ReviewFactory extends Factory
         return [
             'user_id' => User::factory(),
             'dish_id' => Dish::factory(),
-            'rating' => fake()->numberBetween(1, 5),
+            'rating' => fake()->numberBetween(0, 5),
             'comment' => fake()->text(),
         ];
     }
