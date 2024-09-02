@@ -24,4 +24,23 @@ class ReviewController extends Controller
         }
         return response()->json($reviews);
     }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id|numeric',
+            'dish_id' => 'required|exists:dishes,id|numeric',
+            'rating' => 'required|numeric|between:0,5',
+            'comment' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+        $review = Review::create($request->all());
+        return response()->json(['message' => 'Review created successfully', 'review' => $review], 201);
+    }
 }
