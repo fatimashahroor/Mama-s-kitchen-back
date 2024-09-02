@@ -31,7 +31,6 @@ class UserFactory extends Factory
             'status' => fake()->randomElement(['available', 'busy', 'offline']),
             'phone' => fake()->phoneNumber(),
             'image_path' => fake()->imageUrl(),
-            'delivery_charge' => fake()->numberBetween(3, 30),
         ];
     }
 

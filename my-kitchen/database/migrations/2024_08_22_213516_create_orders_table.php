@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('location_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('status');
+            $table->dateTime('order_date');
             $table->string('order_price'); //price of all dishes with the additional ingredients
             $table->timestamps();
         });

@@ -30,6 +30,7 @@ class OrderFactory extends Factory
             'user_id' => User::factory(),
             'location_id' => Location::factory(),
             'status' => $this->faker->randomElement(['requested','pending', 'issued', 'canceled']),
+            'order_date' => $this->faker->dateTime(),
             'order_price' => $order_price,
         ];
     }

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->string('rating')->nullable();
             $table->enum('status', ['available', 'busy', 'offline'])->nullable();
-            $table->string('delivery_charge')->nullable();
             $table->timestamps();
         });
 
