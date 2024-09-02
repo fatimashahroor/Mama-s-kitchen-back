@@ -11,6 +11,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\Additional_ingController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -63,3 +64,5 @@ Route::post('/order/update/{id}', [OrderController::class, 'update']);
 Route::get('/payment', [PaymentController::class, 'index']);
 Route::post('/payment/create', [PaymentController::class, 'store']);
 Route::get('/payment/{id}', [PaymentController::class, 'show']);
+
+Route::get('/review', [ReviewController::class, 'index']);
