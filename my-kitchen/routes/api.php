@@ -26,12 +26,17 @@ Route::group(['middleware' => ['auth']], function() {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/role', [RoleController::class, 'index']);
 Route::get('/role/{id}', [RoleController::class, 'show']);
 Route::post('/role/create', [RoleController::class, 'store']);
 Route::put('/role/update/{id}', [RoleController::class, 'update']);
+Route::delete('/role/delete/{id}', [RoleController::class, 'destroy']);
 
+Route::get('/user', [UserController::class, 'index']);
 Route::post('/user/create', [UserController::class, 'store']);
 Route::get('/user/{id}', [UserController::class, 'show']);
+Route::put('/user/update/{id}', [UserController::class, 'update']);
+Route::delete('/user/delete/{id}', [UserController::class, 'destroy']);
 
 Route::get('/dish', [DishController::class, 'index']);
 Route::get('/dish/{id}', [DishController::class, 'show']);
