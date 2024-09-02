@@ -67,3 +67,6 @@ Route::get('/payment/{id}', [PaymentController::class, 'show']);
 
 Route::get('/review', [ReviewController::class, 'index']);
 Route::post('/review/create', [ReviewController::class, 'store']);
+Route::get('/review/{id}', [ReviewController::class, 'show']);
+Route::post('/review/update/{id}', [ReviewController::class, 'update']);
+Route::delete('/review/delete/{id}', [ReviewController::class, 'destroy']);

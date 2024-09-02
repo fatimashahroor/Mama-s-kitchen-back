@@ -43,4 +43,20 @@ class ReviewController extends Controller
         $review = Review::create($request->all());
         return response()->json(['message' => 'Review created successfully', 'review' => $review], 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|numeric|between:0,5',
+            'comment' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()], 400);
+        }
+        $review = Review::findOrFail($id);
+        $review->update($request->all());
+        return response()->json(['message' => 'Review updated successfully', 'review' => $review], 200);
+    }
 }
