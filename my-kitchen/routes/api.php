@@ -66,3 +66,4 @@ Route::post('/payment/create', [PaymentController::class, 'store']);
 Route::get('/payment/{id}', [PaymentController::class, 'show']);
 
 Route::get('/review', [ReviewController::class, 'index']);
+Route::post('/review/create', [ReviewController::class, 'store']);
