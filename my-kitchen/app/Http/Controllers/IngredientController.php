@@ -12,14 +12,14 @@ class IngredientController extends Controller
     {
          $this->middleware('permission:ingredient-list');
          $this->middleware('permission:ingredient-create', ['only' => ['store']]);
-         $this->middleware('permission:ingredient-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:ingredient-edit', ['only' => ['update']]);
          $this->middleware('permission:ingredient-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
         $ingredientes= Ingredient::latest()->paginate(5);
-        if (!$ingredientes) {
+        if ($ingredientes['total'] == 0) {
             return response()->json(['message' => 'No ingredients found'], 404);
         }
         return response()->json($ingredientes);

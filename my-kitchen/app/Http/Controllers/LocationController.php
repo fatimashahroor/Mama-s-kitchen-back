@@ -11,15 +11,15 @@ class LocationController extends Controller
     function __construct()
     {
          $this->middleware('permission:location-list');
-         $this->middleware('permission:location-create', ['only' => ['create','store']]);
-         $this->middleware('permission:location-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:location-create', ['only' => ['store']]);
+         $this->middleware('permission:location-edit', ['only' => ['update']]);
          $this->middleware('permission:location-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
         $location = Location::latest()->paginate(5);
-        if (!$location) {
+        if ($location['total']== 0) {
             return response()->json(['message' => 'No location found'], 404);
         }
         return response()->json($location);

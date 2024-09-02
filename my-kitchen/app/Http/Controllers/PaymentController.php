@@ -11,14 +11,12 @@ class PaymentController extends Controller
     {
          $this->middleware('permission:payment-list');
          $this->middleware('permission:payment-create', ['only' => ['store']]);
-         $this->middleware('permission:payment-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:payment-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
         $payment= Payment::latest()->paginate(5);
-        if (!$payment) {
+        if ($payment['total'] == 0) {
             return response()->json(['message' => 'No payments found'], 404);
         }
         return response()->json($payment);
