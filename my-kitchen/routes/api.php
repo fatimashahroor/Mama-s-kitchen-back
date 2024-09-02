@@ -57,5 +57,9 @@ Route::delete('/additional_ing/delete/{id}', [Additional_ingController::class, '
 
 Route::get('/order', [OrderController::class, 'index']);
 Route::post('/order/create', [OrderController::class, 'store']);
+Route::get('/order/{id}', [OrderController::class, 'show']);
+Route::post('/order/update/{id}', [OrderController::class, 'update']);
 
 Route::get('/payment', [PaymentController::class, 'index']);
+Route::post('/payment/create', [PaymentController::class, 'store']);
+Route::get('/payment/{id}', [PaymentController::class, 'show']);

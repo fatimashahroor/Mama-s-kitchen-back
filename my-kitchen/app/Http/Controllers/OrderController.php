@@ -32,6 +32,7 @@ class OrderController extends Controller
             'location_id' => 'required|exists:locations,id|numeric',
             'order_price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
             'status' => 'required|string',
+            'order_date' => 'required|date_format:Y-m-d H:i:s',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -45,4 +46,35 @@ class OrderController extends Controller
         }
         return response()->json(['message' => 'Order created successfully', 'order' => $order], 201);
     }
+
+    public function update ($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'location_id' => 'required|exists:locations,id|numeric',
+            'order_price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
+            'status' => 'required|string',
+            'order_date' => 'required|date_format:Y-m-d H:i:s',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+        $order->update($request->all());
+        return response()->json(['message' => 'Order updated successfully', 'order' => $order], 200);
+    }    
+
+    public function show($id)
+    {
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+        return response()->json($order);
+    }
 }
+
+
+
