@@ -9,15 +9,18 @@ class DishController extends Controller
     function __construct()
     {
          $this->middleware('permission:dish-list', ['only'=>['show']]);
-         $this->middleware('permission:dish-create', ['only' => ['create','store']]);
-         $this->middleware('permission:dish-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:dish-create', ['only' => ['store']]);
+         $this->middleware('permission:dish-edit', ['only' => ['update']]);
          $this->middleware('permission:dish-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
-        $dishes = Dish::latest()->paginate(5);
-        return response()->json($dishes);
+        $dish= Dish::latest()->paginate(5);
+        if ($dish['total'] == 0) {
+            return response()->json(['message' => 'No dishes found'], 404);
+        }
+        return response()->json($dish);
     }
 
     public function store(Request $request)
