@@ -84,6 +84,17 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+    public function refreshToken(Request $request) {
+        try {
+            $newToken = auth('api')->refresh(); 
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['error' => 'Refresh token is invalid'], 401);
+        }
+
+        return response()->json(['token' => $newToken]);
+    }
+
     /**
      * Get the authenticated user's profile.
      *
