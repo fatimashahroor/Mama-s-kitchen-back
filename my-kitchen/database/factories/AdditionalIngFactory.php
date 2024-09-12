@@ -18,9 +18,10 @@ class AdditionalIngFactory extends Factory
      */
     public function definition(): array
     {
+        $ingredients= ['cheese', 'bbq sauce', 'mushrooms', 'pepper'];
         return [
             'user_id' => User::factory(),
-            'ingredient_id'=>Ingredient::factory(),
+            'name' => $this->faker->randomElement($ingredients),
             'cost'->$this->faker->numberBetween(0, 20),
         ];
     }
