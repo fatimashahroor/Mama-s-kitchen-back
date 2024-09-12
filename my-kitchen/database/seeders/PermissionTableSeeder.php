@@ -13,23 +13,24 @@ class PermissionTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
        $permissions = [
            'role-list', 'role-create', 'role-edit', 'role-delete',
            'dish-list', 'dish-create', 'dish-edit', 'dish-delete', 
            'user-list', 'user-create', 'user-edit','user-delete', 
            'review-list', 'review-create', 'review-edit', 'review-delete',
+           'rating-list', 'rating_create',
+           'cooks-list',
            'order-list', 'order-create', 'order-edit',
            'payment-list','payment-create', 
-           'additional_ing-list', 'additional_ing-edit', 'additional_ing-delete',
-           'ingredient-list', 'ingredient-create', 'ingredient-edit', 'ingredient-delete',
+           'additional_ing-list', 'additional_ing-create', 'additional_ing-edit', 'additional_ing-delete',
            'location-list','location-create', 'location-edit', 'location-delete',
         ];
 
 
         foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission, 'guard_name'=> 'api']);
+             Permission::create(attributes: ['name' => $permission, 'guard_name'=> 'api']);
         }
     }
 }
