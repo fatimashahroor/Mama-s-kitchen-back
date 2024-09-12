@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('price'); //price of a single dish
             $table->string('image_path')->nullable();
             $table->string('steps')->nullable();
+            $table->enum('diet_type', ['Vegan', 'Vegetarian', 'Gluten-free', 'Animal-based']);
+            $table->time('duration');
             $table->enum('available_on', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Daily']);
             $table->timestamps();
         });
