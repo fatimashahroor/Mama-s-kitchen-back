@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('additional_ings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ingredient_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->string('name');
             $table->string('cost');
             $table->timestamps();
         });
