@@ -9,16 +9,11 @@ class Additional_ing extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['ingredient_id', 'user_id', 'cost'];
+    protected $fillable = ['name', 'user_id', 'cost'];
 
     public function order()
     {
         return $this->belongsToMany(Order::class);
-    }
-
-    public function ingredient()
-    {
-        return $this->belongsTo(Ingredient::class);
     }
 
     public function dish()
