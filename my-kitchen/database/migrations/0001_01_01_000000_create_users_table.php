@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('password');
             $table->integer('age')->nullable();
             $table->string('phone')->nullable();
+            $table->string('located_in')->nullable();
             $table->text('bio')->nullable();
             $table->string('image_path')->nullable();
-            $table->string('rating')->nullable();
+            $table->double('rating')->nullable();
+            $table->bigInteger('rating_count')->nullable();
             $table->enum('status', ['available', 'busy', 'offline'])->nullable();
             $table->timestamps();
         });
