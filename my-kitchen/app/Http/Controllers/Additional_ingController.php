@@ -10,7 +10,7 @@ class Additional_ingController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:additional_ing-list');
+         $this->middleware('permission:additional_ing-list', ['only' => ['show']]);
          $this->middleware('permission:additional_ing-edit', ['only' => ['update']]);
          $this->middleware('permission:additional_ing-delete', ['only' => ['destroy']]);
     }
@@ -24,12 +24,19 @@ class Additional_ingController extends Controller
         return response()->json($additional_ings);
     }
 
-    public static function store($user_id, $ingredient_id, $cost)
+    public static function store($user_id, Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'cost' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'name' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         $additional_ing = new Additional_ing();
         $additional_ing->user_id = $user_id;
-        $additional_ing->ingredient_id = $ingredient_id;
-        $additional_ing->cost = $cost;
+        $additional_ing->cost = $request->cost;
+        $additional_ing->name = $request->name;
         if (!$additional_ing->save()) {
             return ['message' => 'Error while creating additional ingredient'];
         }
@@ -40,6 +47,7 @@ class Additional_ingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'cost' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'name' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -51,11 +59,11 @@ class Additional_ingController extends Controller
         $additional_ing->update($request->all());
         return response()->json(['message' => 'Additional ingredient updated successfully', 'additional_ing' => $additional_ing], 200);
     }
-    public function show($id)
+    public function show($user_id)
     {
-        $additional_ing= Additional_ing::find($id);
+        $additional_ing= Additional_ing::where('user_id', $user_id)->get();
         if (!$additional_ing) {
-            return response()->json(['message' => 'Additional ingredient not found'], 404);
+            return response()->json(['message' => 'No Additional ingredient found'], 404);
         }
         return response()->json($additional_ing);
     }
