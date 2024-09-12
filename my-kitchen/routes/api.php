@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\DishController;
-use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +21,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
 });
-
+Route::post('/refresh-token', 'AuthController@refreshToken');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -35,21 +34,30 @@ Route::delete('/role/delete/{id}', [RoleController::class, 'destroy']);
 Route::get('/user', [UserController::class, 'index']);
 Route::post('/user/create', [UserController::class, 'store']);
 Route::get('/user/{id}', [UserController::class, 'show']);
-Route::put('/user/update/{id}', [UserController::class, 'update']);
+Route::post('/user/update/{id}', [UserController::class, 'update']);
 Route::delete('/user/delete/{id}', [UserController::class, 'destroy']);
+Route::get('/cooks', [UserController::class, 'listCooks']);
+Route::post('/user/rating', [UserController::class, 'setRating']);
+Route::get('/user/rating/{user_id}', [UserController::class, 'getOverallRating']);
 
 Route::get('/dish', [DishController::class, 'index']);
 Route::get('/dish/{id}', [DishController::class, 'show']);
 Route::post('/dish/create', [DishController::class, 'store']);
 Route::post('/dish/update/{id}', [DishController::class, 'update']);
 Route::delete('/dish/delete/{id}', [DishController::class, 'destroy']);
-
-Route::get('/ingredient', [IngredientController::class, 'index']);
-Route::get('/ingredient/{id}', [IngredientController::class, 'show']);
-Route::post('/ingredient/create', [IngredientController::class, 'store']);
-Route::post('/ingredient/update/{id}', [IngredientController::class, 'update']);
-Route::delete('/ingredient/delete/{id}', [IngredientController::class, 'destroy']);
-
+Route::get('/dishes/{user_id}', [DishController::class, 'getDishesByUser']);
+Route::get('/dish/ingredients/{id}', [DishController::class, 'getDishIngredients']);
+Route::get('/image/{filename}', function ($filename) {
+    $path = storage_path('public/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
+});
 Route::get('/location', [LocationController::class, 'index']);
 Route::get('/location/{id}', [LocationController::class, 'show']);
 Route::post('/location/create', [LocationController::class, 'store']);
@@ -57,6 +65,7 @@ Route::post('/location/update/{id}', [LocationController::class, 'update']);
 Route::delete('/location/delete/{id}', [LocationController::class, 'destroy']);
 
 Route::get('/additional_ing', [Additional_ingController::class, 'index']);
+Route::post('/additional_ing/create/{user_id}', [Additional_ingController::class, 'store']);
 Route::get('/additional_ing/{id}', [Additional_ingController::class, 'show']);
 Route::post('/additional_ing/update/{id}', [Additional_ingController::class, 'update']);
 Route::delete('/additional_ing/delete/{id}', [Additional_ingController::class, 'destroy']); 
@@ -72,6 +81,6 @@ Route::get('/payment/{id}', [PaymentController::class, 'show']);
 
 Route::get('/review', [ReviewController::class, 'index']);
 Route::post('/review/create', [ReviewController::class, 'store']);
-Route::get('/review/{id}', [ReviewController::class, 'show']);
+Route::get('/review/{dish_id}', [ReviewController::class, 'getDishReviews']);
 Route::post('/review/update/{id}', [ReviewController::class, 'update']);
 Route::delete('/review/delete/{id}', [ReviewController::class, 'destroy']);
