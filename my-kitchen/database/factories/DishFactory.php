@@ -33,6 +33,8 @@ class DishFactory extends Factory
             'image_path' => fake()->imageUrl(),
             'price' => fake()->numberBetween(1, 50),
             'steps' => fake()->paragraphs(3, true),
+            'duration' => fake()->time('H:i:s'),
+            'diet_type' => fake()->randomElement(['Vegan', 'Vegetarian', 'Gluten-free', 'Animal-based']),
             'available_on' => fake()->randomElement('Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Daily')
         ];
     }
