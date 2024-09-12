@@ -30,6 +30,9 @@ class UserFactory extends Factory
             'bio' => fake()->text(),
             'status' => fake()->randomElement(['available', 'busy', 'offline']),
             'phone' => fake()->phoneNumber(),
+            'rating' => fake()->numberBetween(),
+            'rating_count' => fake()->numberBetween(),
+            'located_in' => fake()->city(),
             'image_path' => fake()->imageUrl(),
         ];
     }
