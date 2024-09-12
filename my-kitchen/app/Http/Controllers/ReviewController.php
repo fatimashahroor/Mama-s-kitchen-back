@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class ReviewController extends Controller
 {
@@ -33,14 +34,19 @@ class ReviewController extends Controller
             'rating' => 'required|numeric|between:0,5',
             'comment' => 'required|string',
         ]);
-
+        $existingReview = Review::where('user_id', $request->user_id)->where('dish_id', $request->dish_id)->first();
+        if ($existingReview) {
+            return response()->json([
+                'message' => 'You have already submitted a review on this dish.'], 409);
+        }
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validation failed',
+                'message' => 'Rating or review section is empty',
                 'errors' => $validator->errors()
             ], 400);
         }
         $review = Review::create($request->all());
+        $review->save();
         return response()->json(['message' => 'Review created successfully', 'review' => $review], 201);
     }
 
@@ -60,15 +66,23 @@ class ReviewController extends Controller
         return response()->json(['message' => 'Review updated successfully', 'review' => $review], 200);
     }
 
-    public function show($id)
+    public function getDishReviews($dish_id)
     {
-        $review = Review::find($id);
-        if (!$review) {
-            return response()->json(['message' => 'Review not found'], 404);
+        $reviews = Review::with('user')->where('dish_id', $dish_id)->latest()->paginate(10);
+        if ($reviews->isEmpty()) {
+            return response()->json(['message' => 'No Reviews found'], 404);
         }
-        return response()->json($review);
+        $reviewsWithUser = $reviews->map(function ($review) {
+            return [
+                'id' => $review->id, 'user_id' => $review->user_id, 'full_name' => $review->user->full_name,
+                'dish_id' => $review->dish_id, 'rating' => $review->rating, 'comment' => $review->comment,
+                'created_at' => $review->created_at,'updated_at' => $review->updated_at,
+            ];
+        });
+    
+        return response()->json($reviewsWithUser);
     }
-
+    
     public function destroy($id)
     {
         $review = Review::find($id);
