@@ -131,9 +131,14 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
+        if ($user->rating_count == 0) {
+            $overall_rating = 0;
+        } else {
+            $overall_rating = round($user->rating / $user->rating_count);
+        }
         return response()->json(['user'=>['id'=>$user->id, 'full_name'=>$user->full_name, 'email'=>$user->email, 'age'=>$user->age,
         'phone'=>$user->phone, 'bio'=>$user->bio, 'located_in'=>$user->located_in, 'image_path'=>$user->image_path, 
-        'overall_rating'=>$user->rating/$user->rating_count,'status'=>$user->status, 'created_at'=>$user->created_at, 'updated_at'=>$user->updated_at], 
+        'overall_rating'=>$overall_rating,'status'=>$user->status, 'created_at'=>$user->created_at, 'updated_at'=>$user->updated_at], 
         'role'=>$role]);
     }
     
