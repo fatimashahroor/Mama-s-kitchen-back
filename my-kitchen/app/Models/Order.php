@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'location_id', 'order_price', 'order_date' ,'status'];
+    protected $fillable = ['user_id','cook_id', 'location_id', 'order_price', 'order_date' ,'status'];
 
     public function user()
     {
@@ -21,9 +21,10 @@ class Order extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function dish()
+    public function dishes()
     {
-        return $this->belongsToMany(Dish::class);
+        return $this->belongsToMany(Dish::class, 'orders_dishes', 'order_id', 'dish_id')
+                ->using(OrderDish::class)->withPivot('quantity', 'comment');
     }
 
     public function additional_ingredient()
