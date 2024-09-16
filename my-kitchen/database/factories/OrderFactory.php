@@ -28,6 +28,7 @@ class OrderFactory extends Factory
         $order_price= $totalDishesPrice + $additional_ings_cost;
         return [
             'user_id' => User::factory(),
+            'cook_id' => User::factory(),
             'location_id' => Location::factory(),
             'status' => $this->faker->randomElement(['requested','pending', 'issued', 'canceled']),
             'order_date' => $this->faker->dateTime(),
