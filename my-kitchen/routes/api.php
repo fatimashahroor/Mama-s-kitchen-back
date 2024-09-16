@@ -70,7 +70,7 @@ Route::get('/additional_ing/{id}', [Additional_ingController::class, 'show']);
 Route::post('/additional_ing/update/{id}', [Additional_ingController::class, 'update']);
 Route::delete('/additional_ing/delete/{id}', [Additional_ingController::class, 'destroy']); 
 
-Route::get('/order', [OrderController::class, 'index']);
+Route::get('/order', [OrderController::class, 'getCurrentUserDishes']);
 Route::post('/order/create', [OrderController::class, 'store']);
 Route::get('/order/{id}', [OrderController::class, 'show']);
 Route::post('/order/update/{id}', [OrderController::class, 'update']);
