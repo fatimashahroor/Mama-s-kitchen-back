@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderDishAdditional;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
@@ -29,47 +30,76 @@ class OrderController extends Controller
         $orders = null;
         if($payload->get('role')[0] == "cook") {
             $cook_id = $payload->get('sub');
-            $orders = Order::with(['dishes.additional_ingredients' => function ($query) {
-                $query->withPivot('quantity'); 
-            }])
-            ->where('cook_id', $cook_id)
+            $orders = Order::select('orders.id as order_id', 'orders.status as order_status', 'orders.order_date', 'orders.order_price', 'orders.location_id', 'orders.user_id as customer_id', 'dishes.id as dish_id', 'dishes.name as dish_name', 'dishes.image_path as dish_image',
+             'od.quantity as dish_quantity', 'additional_ings.id as additional_ing_id', 'additional_ings.name as additional_ing_name', 'oadi.quantity as additional_ing_quantity', 'od.comment as dish_comment')
+            ->join('orders_dishes as od', 'od.order_id', '=', 'orders.id')
+            ->join('dishes', 'dishes.id', '=', 'od.dish_id')
+            ->leftJoin('orders_dishes_additional_ings as oadi', function ($join) {
+                $join->on('oadi.dish_id', '=', 'dishes.id')
+                     ->on('oadi.order_id', '=', 'orders.id');
+            })
+            ->leftJoin('additional_ings', 'additional_ings.id', '=', 'oadi.additional_ing_id')
+            ->where('orders.cook_id', $cook_id)
             ->get();
+ 
         } else if($payload->get('role')[0] == "customer") {
             $customer_id = $payload->get('sub');
-            $orders = Order::with(['dishes.additional_ingredients' => function ($query) {
-                $query->withPivot('quantity'); 
-            }])
-            ->where('user_id', $customer_id)
+            $orders = Order::select('orders.id as order_id', 'orders.status as order_status', 'orders.order_date', 'orders.order_price', 'orders.location_id', 'orders.user_id as customer_id', 'dishes.id as dish_id', 'dishes.name as dish_name', 'dishes.image_path as dish_image',
+             'od.quantity as dish_quantity', 'additional_ings.id as additional_ing_id', 'additional_ings.name as additional_ing_name', 'oadi.quantity as additional_ing_quantity', 'od.comment as dish_comment')
+            ->join('orders_dishes as od', 'od.order_id', '=', 'orders.id')
+            ->join('dishes', 'dishes.id', '=', 'od.dish_id')
+            ->leftJoin('orders_dishes_additional_ings as oadi', function ($join) {
+                $join->on('oadi.dish_id', '=', 'dishes.id')
+                     ->on('oadi.order_id', '=', 'orders.id');
+            })
+            ->leftJoin('additional_ings', 'additional_ings.id', '=', 'oadi.additional_ing_id')
+            ->where('orders.user_id', $customer_id)
             ->get();
         }
-        $orders->map(function ($order) {
-            return [
-                'id' => $order->id,
-                'status' => $order->status,
-                'order_date' => $order->order_date,
-                'order_price' => $order->order_price,
-                'location_id' => $order->location_id,
-                'user_id' => $order->user_id,
-                'dishes' => $order->dishes->map(function ($dish) {
-                    return [
-                        'id' => $dish->id,
-                        'name'=> $dish->name,
-                        'image_path' => $dish->image_path,
-                        'quantity' => $dish->pivot->quantity,
-                        'comment' => $dish->pivot->comment,
-                        'additional_ingredients' => $dish->additional_ingredients->map(function ($ingredient) {
-                            return [
-                                'id' => $ingredient->id,
-                                'name' => $ingredient->name,
-                                'quantity' => $ingredient->pivot->quantity
-                            ];
-                        })
-                    ];
-                })
-            ];
-        });
 
-        return response()->json([$orders]);
+        $organizedOrders = [];
+
+        foreach ($orders as $order) {
+            $orderId = $order->order_id;
+            $dishId = $order->dish_id;
+
+            if (!isset($organizedOrders[$orderId])) {
+                $organizedOrders[$orderId] = [
+                    'order_id' => $orderId,
+                    'order_status' => $order->order_status,
+                    'order_date' => $order->order_date,
+                    'order_price' => $order->order_price,
+                    'location_id' => $order->location_id,
+                    'user_id' => $order->customer_id,
+                    'dishes' => []
+                ];
+            }
+        
+            if (!isset($organizedOrders[$orderId]['dishes'][$dishId])) {
+                $organizedOrders[$orderId]['dishes'][$dishId] = [
+                    'id' => $dishId,
+                    'name' => $order->dish_name,
+                    'image_path' => $order->dish_image,
+                    'quantity' => $order->dish_quantity,
+                    'comment' => $order->dish_comment,
+                    'additional_ings' => []
+                ];
+            }
+        
+            if ($order->additional_ing_id) {
+                $organizedOrders[$orderId]['dishes'][$dishId]['additional_ings'][] = [
+                    'id' => $order->additional_ing_id,
+                    'name' => $order->additional_ing_name,
+                    'quantity' => $order->additional_ing_quantity
+                ];
+            }
+        }
+        
+        foreach ($organizedOrders as &$order) {
+            $order['dishes'] = array_values($order['dishes']);
+        }
+        $organizedOrders = array_values($organizedOrders);
+        return response()->json([$organizedOrders]);
     }
 
 
@@ -100,13 +130,14 @@ class OrderController extends Controller
         $order->save();
         foreach ($request->dishes as $dish) {
             $order->dishes()->attach($dish['dish_id'], ['quantity' => $dish['quantity'], 'comment' => $dish['comment']]);
-        }
-        $dishModel = Dish::find($dish['dish_id']);
-        if ($dishModel && isset($dish['additional_ing'])) {
-            foreach ($dish['additional_ings'] as $additional) {
-                $dishModel->additional_ingredients()->attach($additional['id'], ['quantity' => $additional['quantity']]);
+            $dishModel = Dish::find($dish['dish_id']);
+            if ($dishModel && isset($dish['additional_ings'])) {
+                foreach ($dish['additional_ings'] as $additional) {
+                    OrderDishAdditional::create(['order_id' => $order->id, 'dish_id' => $dishModel->id, 'additional_ing_id' => $additional['additional_id'], 'quantity' => $additional['quantity']]);
+                }
             }
         }
+
         if (!$order) {
             return response()->json(['message' => 'Error while creating order'], 400);
         }
