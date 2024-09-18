@@ -44,14 +44,13 @@ class DishController extends Controller
             'duration' => 'required|date_format:H:i:s',
             'main_ingredients' => 'required|string',
             'photo' => 'sometimes|image|mimes:jpeg,jpg,png',
-            'additional_ings' => 'required',
+            'additional_ings' => 'sometimes',
         ]);
         if ($validator->fails()) {
             $response = response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
             ], 400);
-            echo($response);
             return $response;
         }
         $dish = new Dish();
