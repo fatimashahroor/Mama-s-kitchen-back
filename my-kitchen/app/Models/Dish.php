@@ -30,8 +30,7 @@ class Dish extends Model
 
     public function additional_ingredients()
 {
-    return $this->belongsToMany(Additional_ing::class, 'orders_dishes_additional_ings', 'dish_id', 'additional_ing_id')
-                ->withPivot('quantity')->distinct(); 
+    return $this->belongsToMany(Additional_ing::class, 'dishes_additional_ings', 'dish_id', 'additional_ing_id'); 
 }
 
 }
