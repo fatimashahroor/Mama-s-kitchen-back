@@ -58,8 +58,7 @@ Route::get('/image/{filename}', function ($filename) {
     $response->header("Content-Type", $type);
     return $response;
 });
-Route::get('/location', [LocationController::class, 'index']);
-Route::get('/location/{id}', [LocationController::class, 'show']);
+Route::get('/location/{user_id}', [LocationController::class, 'index']);
 Route::post('/location/create', [LocationController::class, 'store']);
 Route::post('/location/update/{id}', [LocationController::class, 'update']);
 Route::delete('/location/delete/{id}', [LocationController::class, 'destroy']);
