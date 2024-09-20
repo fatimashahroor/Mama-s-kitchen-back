@@ -10,18 +10,19 @@ class LocationController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:location-list');
+         $this->middleware('permission:location-list', ['only' => ['index']]);
          $this->middleware('permission:location-create', ['only' => ['store']]);
          $this->middleware('permission:location-edit', ['only' => ['update']]);
          $this->middleware('permission:location-delete', ['only' => ['destroy']]);
     }
 
-    public function index()
+    public function index($user_id)
     {
-        $location = Location::latest()->paginate(5);
-        if ($location['total']== 0) {
-            return response()->json(['message' => 'No location found'], 404);
+        $location = Location::where('user_id', $user_id)->get();
+        if ($location->isEmpty()) {
+            return response()->json(['message' => 'No locations found'], 404);
         }
+    
         return response()->json($location);
     }
 
