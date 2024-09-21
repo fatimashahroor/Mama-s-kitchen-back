@@ -20,7 +20,7 @@ class PermissionTableSeeder extends Seeder
            'dish-list', 'dish-create', 'dish-edit', 'dish-delete', 
            'user-list', 'user-create', 'user-edit','user-delete', 
            'review-list', 'review-create', 'review-edit', 'review-delete',
-           'rating-list', 'rating_create',
+           'rating-list', 'rating-create',
            'cooks-list',
            'order-list', 'order-create', 'order-edit',
            'payment-list','payment-create', 

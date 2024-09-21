@@ -106,13 +106,20 @@ class OrderController extends Controller
     public function store (Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'cook_id' => 'required|exists:users,id|numeric',
+            'orders' => 'required|array|min:1',
+            'orders.*.cook_id' => 'required|exists:users,id|numeric',
+            'orders.*.order_price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
+            'orders.*.dishes' => 'required|array|min:1',
+            'orders.*.dishes.*.dish_id' => 'required|exists:dishes,id|numeric',
+            'orders.*.dishes.*.quantity' => 'required|numeric|gt:0',
+            'orders.*.dishes.*.comment' => 'nullable|string|max:255',
+            'orders.*.dishes.*.additional_ings' => 'sometimes|array',
+            'orders.*.dishes.*.additional_ings.*.additional_ing_id' => 'sometimes|exists:additional_ings,id|numeric',
+            'orders.*.dishes.*.additional_ings.*.quantity' => 'sometimes|numeric|gt:0',
             'user_id' => 'required|exists:users,id|numeric',
-            'location_id' => 'required|exists:locations,id|numeric',
-            'order_price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
             'status' => 'required|string',
+            'location_id' => 'required|exists:locations,id|numeric',
             'order_date' => 'required|date_format:Y-m-d H:i:s',
-            'dishes' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -120,28 +127,30 @@ class OrderController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
-        $order = new Order();
-        $order->cook_id = $request->cook_id;
-        $order->location_id = $request->location_id;
-        $order->status = $request->status;
-        $order->order_price = $request->order_price;
-        $order->order_date = $request->order_date;
-        $order->user_id = $request->user_id;
-        $order->save();
-        foreach ($request->dishes as $dish) {
-            $order->dishes()->attach($dish['dish_id'], ['quantity' => $dish['quantity'], 'comment' => $dish['comment']]);
-            $dishModel = Dish::find($dish['dish_id']);
-            if ($dishModel && isset($dish['additional_ings'])) {
-                foreach ($dish['additional_ings'] as $additional) {
-                    OrderDishAdditional::create(['order_id' => $order->id, 'dish_id' => $dishModel->id, 'additional_ing_id' => $additional['additional_id'], 'quantity' => $additional['quantity']]);
+        foreach($request->orders as $order) {
+            $newOrder = new Order();
+            $newOrder->cook_id = $order['cook_id'];
+            $newOrder->location_id = $request->location_id;
+            $newOrder->status = $request->status;
+            $newOrder->order_price = $order['order_price'];
+            $newOrder->order_date = $request->order_date;
+            $newOrder->user_id = $request->user_id;
+            $newOrder->save();
+            foreach ($order['dishes'] as $dish) {
+                $newOrder->dishes()->attach($dish['dish_id'], ['quantity' => $dish['quantity'], 'comment' => $dish['comment']]);
+                $dishModel = Dish::find($dish['dish_id']);
+                if ($dishModel && isset($dish['additional_ings'])) {
+                    foreach ($dish['additional_ings'] as $additional) {
+                        OrderDishAdditional::create(['order_id' => $newOrder->id, 'dish_id' => $dishModel->id, 'additional_ing_id' => $additional['id'], 'quantity' => $additional['quantity']]);
+                    }
                 }
             }
         }
 
         if (!$order) {
-            return response()->json(['message' => 'Error while creating order'], 400);
+            return response()->json(['message' => 'Error while creating order'], 401);
         }
-        return response()->json(['message' => 'Order created successfully', 'order' => $order], 201);
+        return response()->json(['message' => 'Order created successfully'], 201);
     }
 
     public function update ($id, Request $request)
