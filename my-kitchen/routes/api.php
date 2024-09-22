@@ -40,25 +40,29 @@ Route::get('/cooks', [UserController::class, 'listCooks']);
 Route::post('/user/rating', [UserController::class, 'setRating']);
 Route::get('/user/rating/{user_id}', [UserController::class, 'getOverallRating']);
 
-Route::get('/dish', [DishController::class, 'index']);
-Route::get('/dish/{id}', [DishController::class, 'show']);
-Route::post('/dish/create', [DishController::class, 'store']);
-Route::post('/dish/update/{id}', [DishController::class, 'update']);
-Route::delete('/dish/delete/{id}', [DishController::class, 'destroy']);
-Route::get('/dishes/{user_id}', [DishController::class, 'getDishesByUser']);
-Route::get('/dish/ingredients/{id}', [DishController::class, 'getDishIngredients']);
-Route::get('/image/{filename}', function ($filename) {
-    $path = storage_path('public/' . $filename);
-    if (!File::exists($path)) {
-        abort(404);
-    }
-    $file = File::get($path);
-    $type = File::mimeType($path);
-    $response = Response::make($file, 200);
-    $response->header("Content-Type", $type);
-    return $response;
+Route::middleware('throttle:api')->group(function () {
+    Route::get('/dish', [DishController::class, 'index']);
+    Route::get('/dish/{id}', [DishController::class, 'show']);
+    Route::post('/dish/create', [DishController::class, 'store']);
+    Route::post('/dish/update/{id}', [DishController::class, 'update']);
+    Route::delete('/dish/delete/{id}', [DishController::class, 'destroy']);
+    Route::get('/dishes/{user_id}', [DishController::class, 'getDishesByUser']);
+    Route::get('/dish/ingredients/{id}', [DishController::class, 'getDishIngredients']);
+    Route::get('/image/{filename}', function ($filename) {
+        $path = storage_path('public/' . $filename);
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    });
 });
+
 Route::get('/location/{user_id}', [LocationController::class, 'index']);
+Route::get('/user/location/{id}', [LocationController::class, 'show']);
 Route::post('/location/create', [LocationController::class, 'store']);
 Route::post('/location/update/{id}', [LocationController::class, 'update']);
 Route::delete('/location/delete/{id}', [LocationController::class, 'destroy']);

@@ -24,9 +24,13 @@ class RoleController extends Controller
          $this->middleware('permission:role-edit', ['only' => ['update']]);
          $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
-    public function index(Request $request)
+    public function index()
     {
         $roles = Role::orderBy('id','DESC')->paginate(5);
+        $roles->getCollection()->transform(function ($role) {
+            $role->permissions;
+            return $role;
+        });
         return response()->json($roles);
     }
 

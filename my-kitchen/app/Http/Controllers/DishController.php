@@ -128,7 +128,7 @@ class DishController extends Controller
         }
         $validator = Validator::make($request->all(),[
             'name' => 'required|string',
-            'price' => 'required|numeric|gt:0|regex:/^\d+(\.\d{1,2})?$/',
+            'price' => 'required|numeric|gt:0',
             'steps' => 'required|string',
             'available_on' => 'required|string',
             'diet_type' => 'required|string',
