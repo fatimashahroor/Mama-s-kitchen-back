@@ -2,18 +2,31 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User; 
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Role; 
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_user_authenticated_route()
     {
-        $response = $this->get('/');
-
+        $roles = Role::all();
+    
+        $user = User::factory()->create();
+        $role = Role::where('name', 'customer')->first();
+    
+        if (!$role) {
+            $this->fail('Role "customer" not found in the database. Available roles: ' . $roles->pluck('name'));
+        }
+    
+        $user->assignRole($role->name);
+        $token = JWTAuth::fromUser($user);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get('/api/user');
+    
         $response->assertStatus(200);
     }
+    
 }
