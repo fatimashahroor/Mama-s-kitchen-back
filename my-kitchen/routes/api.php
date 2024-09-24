@@ -11,10 +11,12 @@ use App\Http\Controllers\Additional_ingController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TestController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware('jwt.auth');
+Route::get('/', [TestController::class, 'index']);
 
 Auth::routes();
 Route::group(['middleware' => ['auth']], function() {
